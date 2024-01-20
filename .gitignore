@@ -6,8 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
-# CSV generated
+# CSV and generated data
 data/**.csv
+models/dataset/**
+models/out/**
 
 # Distribution / packaging
 .Python

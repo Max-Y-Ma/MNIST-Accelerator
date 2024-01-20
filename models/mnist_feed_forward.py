@@ -16,12 +16,12 @@ batch_size = 100
 learning_rate = 0.001
 
 # MNIST dataset 
-train_dataset = torchvision.datasets.MNIST(root='./data', 
+train_dataset = torchvision.datasets.MNIST(root='./dataset', 
                                            train=True, 
                                            transform=transforms.ToTensor(),  
                                            download=True)
 
-test_dataset = torchvision.datasets.MNIST(root='./data', 
+test_dataset = torchvision.datasets.MNIST(root='./dataset', 
                                           train=False, 
                                           transform=transforms.ToTensor())
 
@@ -34,13 +34,14 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           batch_size=batch_size, 
                                           shuffle=False)
 
-examples = iter(test_loader)
-example_data, example_targets = next(examples)
+## Illustrate Examples
+# examples = iter(test_loader)
+# example_data, example_targets = next(examples)
 
-for i in range(6):
-    plt.subplot(2,3,i+1)
-    plt.imshow(example_data[i][0], cmap='gray')
-plt.show()
+# for i in range(6):
+#     plt.subplot(2,3,i+1)
+#     plt.imshow(example_data[i][0], cmap='gray')
+# plt.show()
 
 # Fully connected neural network with one hidden layer
 class NeuralNet(nn.Module):
@@ -101,3 +102,25 @@ with torch.no_grad():
 
     acc = 100.0 * n_correct / n_samples
     print(f'Accuracy of the network on the 10000 test images: {acc} %')
+
+# Export model parameters (i.e weights and biases)
+layer_count = 1
+for layer in model.children():
+    if isinstance(layer, nn.Linear):
+        # Write weights and biases to files
+        with open(f"out/weights{layer_count}", 'w') as weight_file:
+            with open(f"out/bias{layer_count}", 'w') as bias_file:
+                # Write all weights for each neuron into weight file
+                for neuron_weights in layer.state_dict()['weight'].tolist():
+                    for i in range(len(neuron_weights)):
+                        if i != len(neuron_weights) - 1:
+                            weight_file.write(str(round(neuron_weights[i], 3)) + ',')
+                        else:
+                            weight_file.write(str(round(neuron_weights[i], 3)) + '\n')
+
+                # Write all bias for each neuron into bias file
+                for neuron_bias in layer.state_dict()['bias'].tolist():
+                    bias_file.write(str(round(neuron_bias, 3)) + '\n')
+
+        # Increment layer
+        layer_count += 1
