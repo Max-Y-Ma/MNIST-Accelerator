@@ -11,6 +11,10 @@ data/**.csv
 models/dataset/**
 models/out/**
 
+# Simulation files
+src/out/**
+src/verdi/**
+
 # Distribution / packaging
 .Python
 build/

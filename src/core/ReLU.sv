@@ -1,0 +1,12 @@
+// ReLU Cell Module : ReLU(z) = max(0, z)
+module ReLU_Cell #(
+    parameter DATA_WIDTH = 24
+) (
+    input logic [DATA_WIDTH - 1:0] z,
+    output logic [DATA_WIDTH - 1:0] ReLU_z
+);
+
+    // Check signed bit, assign zero if z is negative
+    assign ReLU_z = z[DATA_WIDTH - 1] ? '0 : z;
+    
+endmodule
