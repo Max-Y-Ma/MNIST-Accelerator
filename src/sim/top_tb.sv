@@ -19,7 +19,7 @@ import uvm_pkg::*;
 // DUT Instantiation
 logic [23:0] z;
 logic [23:0] ReLU_z;
-ReLU_Cell relu_cell(
+ReLU_cell relu_cell(
     .z(z),
     .ReLU_z(ReLU_z)
 );
