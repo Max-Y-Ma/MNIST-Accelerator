@@ -80,7 +80,7 @@ set_wire_load_model -name "5K_hvratio_1_1"
 set_wire_load_mode enclosed
 
 set clk_name $design_clock_pin
-create_clock -period 10 -name my_clk $clk_name
+create_clock -period 2 -name my_clk $clk_name
 # set_dont_touch_network [get_clocks my_clk]
 # set_ideal_network [get_ports clk]
 set_clock_uncertainty 0.1 [get_clocks my_clk]

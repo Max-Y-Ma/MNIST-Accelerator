@@ -27,13 +27,10 @@ module linear_layer #(
             cell_rst <= 1'b1;
             count <= '0;
         end else begin
-            cell_rst <= 1'b0;
+            cell_rst <= (count == INPUT_LENGTH);
             count <= count + 1'b1;
         end
     end
-
-    // Accumulate Rollover Logic
-    assign cell_rst = (count == INPUT_LENGTH);
 
     // Output Valid Logic
     assign o_valid = (count == INPUT_LENGTH); 
