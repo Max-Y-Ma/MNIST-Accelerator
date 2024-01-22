@@ -49,7 +49,7 @@
 UVM_HOME = /home/maxma2/Documents/Projects/MNIST-Accelerator/src/uvm
 
 UVM_VERBOSITY =	UVM_MEDIUM
-TEST = $1
+TEST ?= 
 N_ERRS = 0
 N_FATALS = 0
 
