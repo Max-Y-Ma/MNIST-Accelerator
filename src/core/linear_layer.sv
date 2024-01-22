@@ -42,7 +42,7 @@ module linear_layer #(
     generate
         for (genvar i = 0; i < NUM_NODES; i++) begin : Gen_Linear
             linear_cell #(
-                .DATA_WIDTH(DATA_WIDTH)
+                .DATA_WIDTH(DATA_WIDTH),
                 .WEIGHT_FILE(WEIGHT_FILE)
             ) linear_cell (
                 .clk(clk),

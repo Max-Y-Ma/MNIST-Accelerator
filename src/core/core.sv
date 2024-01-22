@@ -31,7 +31,7 @@ module core #(
         .DATA_WIDTH(DATA_WIDTH),
         .INPUT_LENGTH(LAYER1_WIDTH),
         .NUM_NODES(LAYER2_WIDTH),
-        .BIAS_FILE("src/core/config/layer1_bias.mif")
+        .BIAS_FILE("src/core/config/layer1_bias.mif"),
         .WEIGHT_FILE("src/core/config/layer1_weights.mif")
     ) linear_layer1 (
         .clk(clk),
@@ -57,7 +57,9 @@ module core #(
     logic [DATA_WIDTH-1:0] layer2_regfile [LAYER3_WIDTH];
     always_ff @(posedge clk) begin : reg_file
         if (rst) begin
-            layer2_regfile <= '0;
+            for (int i = 0; i < LAYER3_WIDTH; i++) begin : regfile_rst
+                layer2_regfile[i] <= '0;
+            end
         end else if (layer1_o_valid) begin
             layer2_regfile <= layer2_out;
         end else begin
@@ -90,7 +92,7 @@ module core #(
         .DATA_WIDTH(DATA_WIDTH),
         .INPUT_LENGTH(LAYER3_WIDTH),
         .NUM_NODES(LAYER4_WIDTH),
-        .BIAS_FILE("src/core/config/layer2_bias.mif")
+        .BIAS_FILE("src/core/config/layer2_bias.mif"),
         .WEIGHT_FILE("src/core/config/layer2_weights.mif")
     ) linear_layer2 (
         .clk(clk),
