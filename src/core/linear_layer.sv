@@ -4,7 +4,7 @@ module linear_layer #(
     parameter INPUT_LENGTH = 784,
     parameter NUM_NODES = 500,
     parameter BIAS_FILE = "",
-    parameter WEIGHT_FILE = ""
+    parameter WEIGHT_FILE_PREFIX = ""
 ) (
     input logic clk, rst,
     input logic i_valid,
@@ -33,14 +33,14 @@ module linear_layer #(
     end
 
     // Output Valid Logic
-    assign o_valid = (count == INPUT_LENGTH); 
+    assign o_valid = (count == INPUT_LENGTH);
 
     // Generate layer of Linear Cells
     generate
         for (genvar i = 0; i < NUM_NODES; i++) begin : Gen_Linear
             linear_cell #(
                 .DATA_WIDTH(DATA_WIDTH),
-                .WEIGHT_FILE(WEIGHT_FILE)
+                .WEIGHT_FILE($sformatf("%s%0d.mif", WEIGHT_FILE_PREFIX, i))
             ) linear_cell (
                 .clk(clk),
                 .rst(cell_rst),

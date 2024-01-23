@@ -25,6 +25,10 @@ run_sim: sim
 covrep: out/sim/top_tb.vdb
 	cd out/sim && urg -dir top_tb.vdb
 
+.PHONY: rom
+rom: 
+	cd core/config && rm -f rom/*.mif && python3 mif_gen.py
+
 .PHONY: verdi 
 verdi:
 	mkdir -p out/verdi
