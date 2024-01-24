@@ -1,8 +1,12 @@
+// Core Imports
+`include "core_pkg.svh"
+
+// Top Testbench Module for the MNIST Accelerator Core
 module top_tb;
 
 // UVM Imports
-import uvm_pkg::*;
 `include "uvm_macros.svh"
+import uvm_pkg::*;
 
 // Clock Generation
 bit clk;
