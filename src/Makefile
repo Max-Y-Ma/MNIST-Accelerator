@@ -5,7 +5,7 @@ SHELL=/bin/bash -o pipefail
 .SHELLFLAGS += -e
 
 HDL_SRCS := $(shell find $(PWD)/core -name '*.sv')
-HVL_SRCS := $(shell find $(PWD)/sim -name '*.sv') $(shell find $(PWD)/sim -name '*.svh')
+HVL_SRCS := $(shell find $(PWD)/sim -name '*.sv')
 SRCS := $(HDL_SRCS) $(HVL_SRCS)
 
 export VCS_ARCH_OVERRIDE=linux
@@ -13,7 +13,7 @@ VCS_FLAGS= -full64 -lca -sverilog +lint=all,noNS -timescale=1ns/1ns -debug_acc+a
 INC_DIR=+incdir+$(PWD)/core +incdir+$(PWD)/sim
 
 sim: $(SRCS)
-	mkdir -p out/sim
+	mkdir -p out/sim/
 	cd out/sim && vcs $(VCS) $(SRCS) $(VCS_FLAGS) $(INC_DIR) -msg_config=../../vcs_warn.config -l compile.log -top top_tb -o top_tb
 
 .PHONY: run_sim
