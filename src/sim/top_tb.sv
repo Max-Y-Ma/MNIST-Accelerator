@@ -20,7 +20,7 @@ core_wrapper core_wrapper(cif);
 
 // Add Interface to Config Database and Run Tests
 initial begin
-    uvm_config_db #(virtual core_if)::set(null, "uvm_test_top", "cif", cif);
+    uvm_config_db #(virtual core_if)::set(null, "*", "cif", cif);
     run_test();
 end
 

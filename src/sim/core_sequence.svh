@@ -40,41 +40,22 @@ class core_img_item extends uvm_sequence_item;
         return s;
     endfunction : convert2string
 
-    virtual function void load_image(string file_name, int line_number = -1);
-        // Load image from file
-        int img_file_fd;
-        img_file_fd = $fopen(file_name, "r");
-        if (!img_file_fd) begin
-            uvm_report_fatal("load_image:", $sformatf("File %s not found", file_name));
-            return;
-        end
-
-        // Skip to appropriate line number
-        if (line_number != -1) begin
-            string line;
-            for (int i = 0; i < line_number; i++) begin
-                if (!$fgets(line, img_file_fd)) begin
-                    uvm_report_fatal("load_image:", $sformatf("Line %d not found", line_number));
-                    return;
-                end
-            end
-        end
-
+    virtual function bit load_image(string image_line);
         // Load Label
-        if (!$fscanf(img_file_fd, "%d", label)) begin
+        if (!$sscanf(image_line, "%d%s", label, image_line)) begin
             uvm_report_fatal("load_image:", "Label not found");
-            return;
+            return 0;
         end
 
         // Load Image Data
         for (int i = 0; i < `IMG_WIDTH * `IMG_HEIGHT; i++) begin
-            if (!$fscanf(img_file_fd, ",%d", img[i][`DATA_WIDTH-1 -: `INTEGER_WIDTH])) begin
+            if (!$sscanf(image_line, ",%d%s", img[i][`DATA_WIDTH-1 -: `INTEGER_WIDTH], image_line)) begin
                 uvm_report_fatal("load_image:", "Image data not found");
-                return;
+                return 0;
             end
         end
 
-        // Close File
-        $fclose(img_file_fd);
+        // Image Loaded Successfully
+        return 1;
     endfunction : load_image
 endclass : core_img_item
