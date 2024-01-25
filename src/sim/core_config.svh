@@ -5,3 +5,7 @@
 `define LAYER2_WIDTH (500)
 `define LAYER3_WIDTH (500)
 `define LAYER4_WIDTH (10)
+`define IMG_WIDTH (28)
+`define IMG_HEIGHT (28)
+`define TEST_DATA_FILE_PATH ("../../../data/mnist_test.csv")
+`define TEST_SAMPLES (10000)

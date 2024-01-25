@@ -1,4 +1,5 @@
 // Top Package for MNIST Accelerator Core
+`include "core_config.svh"
 `include "core_interface.svh"
 
 package core_pkg;

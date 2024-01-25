@@ -3,6 +3,7 @@ class core_env extends uvm_env;
     `uvm_component_utils(core_env)
 
     // Agent, Scoreboard, Coverage
+    core_agent agent;
 
     // Constructor
     function new(string name, uvm_component parent);
@@ -13,6 +14,7 @@ class core_env extends uvm_env;
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         // Create Agent
+        agent = core_agent::type_id::create("agent", this);
         // Create Scoreboard
         // Create Coverage
     endfunction : build_phase

@@ -1,37 +1,4 @@
 // Agent, Sequencer, Driver, Monitor Classes for Test Environment of MNIST Accelerator Core
-class core_agent extends uvm_agent;
-    `uvm_component_utils(core_agent)
-
-    // Analysis Port
-    uvm_analysis_port #(core_img_item) aport;
-
-    // Sequencer, Driver, Monitor
-
-    // Constructor
-    function new(string name, uvm_component parent);
-        super.new(name, parent);
-    endfunction : new
-
-    // Create Ports and Components
-    function void build_phase(uvm_phase phase);
-        super.build_phase(phase);
-        // Create Analysis Port
-        // Create Sequencer
-        // Create Driver
-        // Create Monitor
-    endfunction : build_phase
-
-    // Connect Ports 
-    function void connect_phase(uvm_phase phase);
-        super.connect_phase(phase);
-        // Connect Analysis Port
-        // Connect Sequencer
-        // Connect Driver
-        // Connect Monitor
-    endfunction : connect_phase
-
-endclass : core_agent
-
 typedef uvm_sequencer #(core_img_item) core_sequencer;
 
 class core_sequence extends uvm_sequence #(core_img_item);
@@ -44,11 +11,20 @@ class core_sequence extends uvm_sequence #(core_img_item);
 
     // Sequence Body
     task body;
+        int test_image_num = 0;
         forever begin
             // Generate Transactions from Test Dataset
-            // core_img_item txn;
+            core_img_item txn;
+            txn = core_img_item::type_id::create("txn");
             // start_item(txn);
+            txn.load_image(`TEST_DATA_FILE_PATH, test_image_num++);
             // finish_item(txn);
+
+            // End Sequence
+            if (test_image_num == `TEST_SAMPLES) begin
+                `uvm_info("CORE_SEQUENCE", "Test Sequence Completed", UVM_MEDIUM);
+                break;
+            end
         end
     endtask : body
 endclass : core_sequence
@@ -109,3 +85,42 @@ class core_monitor extends uvm_monitor;
     endtask : run_phase
 
 endclass : core_monitor
+
+class core_agent extends uvm_agent;
+    `uvm_component_utils(core_agent)
+
+    // Analysis Port
+    uvm_analysis_port #(core_img_item) aport;
+
+    // Sequencer, Driver, Monitor
+    core_sequencer sequencer;
+    // core_driver driver;
+    // core_monitor monitor;
+
+    // Constructor
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction : new
+
+    // Create Ports and Components
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        // Create Analysis Port
+        // Create Sequencer
+        sequencer = core_sequencer::type_id::create("sequencer", this);
+        // Create Driver
+        // driver = core_driver::type_id::create("driver", this);
+        // Create Monitor
+        // monitor = core_monitor::type_id::create("monitor", this);
+    endfunction : build_phase
+
+    // Connect Ports 
+    function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        // Connect Analysis Port
+        // Connect Sequencer
+        // Connect Driver
+        // Connect Monitor
+    endfunction : connect_phase
+
+endclass : core_agent
