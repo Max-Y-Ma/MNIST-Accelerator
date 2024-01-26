@@ -1,4 +1,6 @@
 // Linear Cell Module, Computes Pipelined Multiply/Accumulate Operation
+`include "core_config.svh"
+
 module linear_cell #(
     parameter DATA_WIDTH = 24,
     parameter INPUT_LENGTH = 784,
@@ -57,9 +59,12 @@ module linear_cell #(
     end
 
     // Multiply input sample by weight, adjusted for fixed point
+    logic [2*DATA_WIDTH-1:0] neuron_mult_comb;
+    assign neuron_mult_comb = $signed(din_dff) * $signed(weight);
+
     logic [DATA_WIDTH-1:0] neuron_mult;
     always_ff @(posedge clk) begin
-        neuron_mult <= $signed(din_dff) * $signed(weight);
+        neuron_mult <= (neuron_mult_comb >> `DECIMAL_WIDTH);
     end
 
     // Neuron Accumulator
