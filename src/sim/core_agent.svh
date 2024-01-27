@@ -167,7 +167,7 @@ class core_monitor extends uvm_monitor;
             // Grab DUT Output Signal
             core_img_item txn;
             txn = new();
-            @(cif.cb iff cif.cb.o_valid);
+            @(posedge cif.clk iff cif.o_valid);
             txn.label = cif.cb.digit;
             aport.write(txn);
             actual_port.put(txn.label);

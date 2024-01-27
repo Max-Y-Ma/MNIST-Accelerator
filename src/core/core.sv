@@ -70,6 +70,7 @@ module core #(
     end
 
     // Serializer
+    logic serializer_o_valid;
     logic [DATA_WIDTH-1:0] layer3_din;
     logic [$clog2(LAYER3_WIDTH)-1:0] serializer_count;
     always_ff @(posedge clk) begin
@@ -83,6 +84,8 @@ module core #(
             layer3_din <= layer3_din;
             serializer_count <= serializer_count;
         end
+
+        serializer_o_valid <= layer2_o_valid;
     end
 
     // Feedforward Linear Layer #2
@@ -97,7 +100,7 @@ module core #(
     ) linear_layer2 (
         .clk(clk),
         .rst(rst),
-        .i_valid(layer1_o_valid),
+        .i_valid(serializer_o_valid),
         .din(layer3_din),
         .dout(layer3_out),
         .o_valid(layer3_o_valid)
@@ -107,11 +110,14 @@ module core #(
     assign o_valid = layer3_o_valid;
 
     // Argmax Output Logic
+    logic [DATA_WIDTH-1:0] max;
     always_comb begin : argmax
+        max = '0;
         digit = '0;
         for (int i = 0; i < LAYER4_WIDTH; i++) begin
-            if ($signed(layer3_out[i]) > $signed(digit)) begin
-                digit = layer3_out[i];
+            if ($signed(layer3_out[i]) > $signed(max)) begin
+                max = layer3_out[i];
+                digit = i;
             end
         end
     end

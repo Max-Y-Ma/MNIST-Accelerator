@@ -20,15 +20,14 @@ module linear_layer #(
     end
 
     // Control Logic
-    logic cell_rst;
     logic [$clog2(INPUT_LENGTH):0] count;
     always_ff @(posedge clk) begin : control_logic
         if (rst || (count == INPUT_LENGTH)) begin
-            cell_rst <= 1'b1;
             count <= '0;
-        end else begin
-            cell_rst <= (count == INPUT_LENGTH);
+        end else if (i_valid || (count != 0)) begin
             count <= count + 1'b1;
+        end else begin
+            count <= count;
         end
     end
 
@@ -43,7 +42,7 @@ module linear_layer #(
                 .WEIGHT_FILE($sformatf("%s%0d.mif", WEIGHT_FILE_PREFIX, i))
             ) linear_cell (
                 .clk(clk),
-                .rst(cell_rst),
+                .rst(rst),
                 .i_valid(i_valid),
                 .din(din),
                 .bias(bias_rom[i]),
