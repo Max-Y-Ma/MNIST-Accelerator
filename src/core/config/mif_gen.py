@@ -6,8 +6,8 @@ directory_path = 'rom/'
 file_list = os.listdir(directory_path)
 
 # Fixed point format
-data_width = 24
-integer_width = 9
+data_width = 32
+integer_width = 17
 decimal_width = data_width - integer_width
 
 # Convert bias file contents to fixed point format
