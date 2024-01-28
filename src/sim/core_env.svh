@@ -25,9 +25,9 @@ class core_scoreboard extends uvm_scoreboard;
 
     // Sample Data
     task run_phase(uvm_phase phase);
+        int actual_label, expected_label;
         forever begin
             // Sample Data
-            int actual_label, expected_label;
             expected_port.get(expected_label);
             actual_port.get(actual_label);
 

@@ -15,6 +15,7 @@ class core_sequence extends uvm_sequence #(core_img_item);
     // Enqueue all test images
     virtual function bit load_images();
         // Open Test Data File
+        core_img_item txn;
         string line;
         int img_file_fd;
         img_file_fd = $fopen(`TEST_DATA_FILE_PATH, "r");
@@ -24,9 +25,10 @@ class core_sequence extends uvm_sequence #(core_img_item);
         end
 
         // Read Test Data File
-        while ($fgets(line, img_file_fd)) begin
+        repeat(`TEST_SAMPLES) begin
+            // Read Line
+            $fgets(line, img_file_fd);
             // Create Transaction
-            core_img_item txn;
             txn = core_img_item::type_id::create("txn");
             // Load Image
             txn.load_image(line);
@@ -41,6 +43,9 @@ class core_sequence extends uvm_sequence #(core_img_item);
 
     // Sequence Body
     task body;
+        // Transaction Handle
+        core_img_item txn;
+
         // Test Image Number
         int test_image_num = 0;
 
@@ -54,13 +59,12 @@ class core_sequence extends uvm_sequence #(core_img_item);
 
         forever begin
             // Dequeue test image transactions 
-            core_img_item txn;
             txn = image_queue.pop_front();
             start_item(txn);
             finish_item(txn);
 
             // End Sequence
-            if (++test_image_num == 20) begin
+            if (++test_image_num == `TEST_SAMPLES) begin
                 `uvm_info("CORE_SEQUENCE", "Test Sequence Completed", UVM_MEDIUM);
                 break;
             end
@@ -95,9 +99,9 @@ class core_driver extends uvm_driver #(core_img_item);
 
     // Drive Signal Phase
     task run_phase(uvm_phase phase);
+        core_img_item txn;
         forever begin
             // Drive Signals
-            core_img_item txn;
             seq_item_port.get_next_item(txn);
 
             // Send Expected Label
@@ -165,9 +169,9 @@ class core_monitor extends uvm_monitor;
 
     // Grab DUT Output Signal
     task run_phase(uvm_phase phase);
+        core_img_item txn;
         forever begin
             // Create Transaction
-            core_img_item txn;
             txn = new();
 
             // Grab DUT Output Signal

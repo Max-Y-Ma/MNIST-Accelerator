@@ -1,3 +1,5 @@
+`timescale 1ns/1ns
+
 // Core Imports
 `include "core_pkg.svh"
 
