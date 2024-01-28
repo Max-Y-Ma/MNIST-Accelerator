@@ -25,20 +25,22 @@ class core_scoreboard extends uvm_scoreboard;
 
     // Sample Data
     task run_phase(uvm_phase phase);
-        // Sample Data
-        int actual_label, expected_label;
-        expected_port.get(expected_label);
-        actual_port.get(actual_label);
+        forever begin
+            // Sample Data
+            int actual_label, expected_label;
+            expected_port.get(expected_label);
+            actual_port.get(actual_label);
 
-        // Compare and Record Accuracy
-        num_total++;
-        if (actual_label == expected_label) begin
-            num_correct++;
+            // Compare and Record Accuracy
+            num_total++;
+            if (actual_label == expected_label) begin
+                num_correct++;
+            end
+
+            // Report Results
+            `uvm_info("SCOREBOARD", $sformatf("\nExpected:%0d | Actual:%0d", expected_label, actual_label), UVM_LOW);
+            `uvm_info("SCOREBOARD", $sformatf("\nAccuracy: %0d/%0d (%0.2f%%)", num_correct, num_total, 100.0 * num_correct / num_total), UVM_LOW);
         end
-
-        // Report Results
-        `uvm_info("SCOREBOARD", $sformatf("\nExpected:%0d | Actual:%0d", expected_label, actual_label), UVM_LOW);
-        `uvm_info("SCOREBOARD", $sformatf("\nAccuracy: %0d/%0d (%0.2f%%)", num_correct, num_total, 100.0 * num_correct / num_total), UVM_LOW);
     endtask : run_phase
 
 endclass : core_scoreboard
@@ -103,8 +105,8 @@ class core_env extends uvm_env;
         // Create Coverage
         coverage = core_coverage::type_id::create("coverage", this);
         // Create UVM FIFO
-        expected_fifo = new("expected_fifo", this, 100);
-        actual_fifo = new("actual_fifo", this, 100);
+        expected_fifo = new("expected_fifo", this);
+        actual_fifo = new("actual_fifo", this);
     endfunction : build_phase
 
     // Connect Ports

@@ -60,7 +60,7 @@ class core_sequence extends uvm_sequence #(core_img_item);
             finish_item(txn);
 
             // End Sequence
-            if (++test_image_num == 10) begin
+            if (++test_image_num == 20) begin
                 `uvm_info("CORE_SEQUENCE", "Test Sequence Completed", UVM_MEDIUM);
                 break;
             end
@@ -118,14 +118,16 @@ class core_driver extends uvm_driver #(core_img_item);
                 cif.cb.pixel <= txn.img[i];
             end
 
+            // Deassert input valid
             @(cif.cb);
             cif.cb.i_valid <= 1'b0;
 
+            // Pipeline Delay
             for (int i = 0; i < `IMG_WIDTH * `IMG_HEIGHT; i++) begin
-                @(cif.cb);
                 @(cif.cb);
             end
 
+            // Finish Driving Signals
             seq_item_port.item_done();
         end
     endtask : run_phase 
@@ -164,10 +166,19 @@ class core_monitor extends uvm_monitor;
     // Grab DUT Output Signal
     task run_phase(uvm_phase phase);
         forever begin
-            // Grab DUT Output Signal
+            // Create Transaction
             core_img_item txn;
             txn = new();
-            @(posedge cif.clk iff cif.o_valid);
+
+            // Grab DUT Output Signal
+            forever begin
+                @(cif.cb);
+                if (cif.cb.o_valid) begin
+                    break;
+                end
+            end
+
+            // Report DUT Output
             txn.label = cif.cb.digit;
             aport.write(txn);
             actual_port.put(txn.label);
@@ -182,8 +193,7 @@ class core_agent extends uvm_agent;
     // Analysis Port
     uvm_analysis_port #(core_img_item) aport;
 
-    // Sequence, Sequencer, Driver, Monitor
-    core_sequence seq;
+    // Sequencer, Driver, Monitor
     core_sequencer sequencer;
     core_driver driver;
     core_monitor monitor;
@@ -198,8 +208,6 @@ class core_agent extends uvm_agent;
         super.build_phase(phase);
         // Create Analysis Port
         aport = new("aport", this);
-        // Create Sequence
-        seq = core_sequence::type_id::create("seq", this);
         // Create Sequencer
         sequencer = core_sequencer::type_id::create("sequencer", this);
         // Create Driver
@@ -216,13 +224,5 @@ class core_agent extends uvm_agent;
         // Connect Driver w/ Sequencer
         driver.seq_item_port.connect(sequencer.seq_item_export);
     endfunction : connect_phase
-
-    // Run Test Sequence
-    task run_phase(uvm_phase phase);
-        // Run Test Sequence
-        phase.raise_objection(this);
-        seq.start(sequencer);
-        phase.drop_objection(this);
-    endtask
 
 endclass : core_agent
