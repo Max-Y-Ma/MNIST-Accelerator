@@ -4,7 +4,7 @@
 
 # Format
 The format is
-    label, pix-11, pix-12, pix-13, ...
+    label1, pix-11, pix-12, pix-13, ...
+    label2, pix-21, pix-22, pix-23, ...
 
 Refer to [MNIST in CSV](https://pjreddie.com/projects/mnist-in-csv/)
-
