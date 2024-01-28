@@ -10,6 +10,7 @@ module linear_cell #(
     input logic i_valid,
     input logic [DATA_WIDTH-1:0] din,
     input logic [DATA_WIDTH-1:0] bias,
+    output logic o_valid,
     output logic [DATA_WIDTH-1:0] dout
 );
 
@@ -77,6 +78,8 @@ module linear_cell #(
         end else begin
             accumulator <= accumulator;
         end
+
+        o_valid <= (neuron_count == INPUT_LENGTH);
     end
 
     // Output Logic

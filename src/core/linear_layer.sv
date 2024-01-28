@@ -19,26 +19,13 @@ module linear_layer #(
         $readmemb(BIAS_FILE, bias_rom, 0, NUM_NODES);
     end
 
-    // Control Logic
-    logic [$clog2(INPUT_LENGTH):0] count;
-    always_ff @(posedge clk) begin : control_logic
-        if (rst || (count == INPUT_LENGTH)) begin
-            count <= '0;
-        end else if (i_valid || (count != 0)) begin
-            count <= count + 1'b1;
-        end else begin
-            count <= count;
-        end
-    end
-
-    // Output Valid Logic
-    assign o_valid = (count == INPUT_LENGTH);
-
     // Generate layer of Linear Cells
+    logic o_valid_vector [NUM_NODES];
     generate
         for (genvar i = 0; i < NUM_NODES; i++) begin : Gen_Linear
             linear_cell #(
                 .DATA_WIDTH(DATA_WIDTH),
+                .INPUT_LENGTH(INPUT_LENGTH),
                 .WEIGHT_FILE($sformatf("%s%0d.mif", WEIGHT_FILE_PREFIX, i))
             ) linear_cell (
                 .clk(clk),
@@ -46,9 +33,13 @@ module linear_layer #(
                 .i_valid(i_valid),
                 .din(din),
                 .bias(bias_rom[i]),
+                .o_valid(o_valid_vector[i]),
                 .dout(dout[i])
             );
         end
     endgenerate
+
+    // Output Logic
+    assign o_valid = o_valid_vector[0];
     
 endmodule

@@ -60,7 +60,7 @@ class core_sequence extends uvm_sequence #(core_img_item);
             finish_item(txn);
 
             // End Sequence
-            if (++test_image_num == 1) begin
+            if (++test_image_num == 10) begin
                 `uvm_info("CORE_SEQUENCE", "Test Sequence Completed", UVM_MEDIUM);
                 break;
             end
@@ -118,11 +118,11 @@ class core_driver extends uvm_driver #(core_img_item);
                 cif.cb.pixel <= txn.img[i];
             end
 
-            for (int i = 0; i < `IMG_WIDTH * `IMG_HEIGHT; i++) begin
-                @(cif.cb);
-            end
+            @(cif.cb);
+            cif.cb.i_valid <= 1'b0;
 
             for (int i = 0; i < `IMG_WIDTH * `IMG_HEIGHT; i++) begin
+                @(cif.cb);
                 @(cif.cb);
             end
 

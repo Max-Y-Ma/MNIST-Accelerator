@@ -1,5 +1,5 @@
-`define DATA_WIDTH (24)
-`define INTEGER_WIDTH (9)
+`define DATA_WIDTH (32)
+`define INTEGER_WIDTH (17)
 `define DECIMAL_WIDTH (`DATA_WIDTH - `INTEGER_WIDTH)
 `define LAYER1_WIDTH (784)
 `define LAYER2_WIDTH (500)
