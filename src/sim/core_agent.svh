@@ -27,7 +27,12 @@ class core_sequence extends uvm_sequence #(core_img_item);
         // Read Test Data File
         repeat(`TEST_SAMPLES) begin
             // Read Line
-            $fgets(line, img_file_fd);
+            if (!$fgets(line, img_file_fd)) begin
+                `uvm_fatal("CORE_SEQUENCE", "End of file reached before expected!");
+                $fclose(img_file_fd);
+                return 0;
+            end
+
             // Create Transaction
             txn = core_img_item::type_id::create("txn");
             // Load Image
@@ -72,6 +77,7 @@ class core_sequence extends uvm_sequence #(core_img_item);
     endtask : body
 endclass : core_sequence
 
+// Single Mode Stimulus Driver 
 class core_driver extends uvm_driver #(core_img_item);
     `uvm_component_utils(core_driver)
 
@@ -100,6 +106,7 @@ class core_driver extends uvm_driver #(core_img_item);
     // Drive Signal Phase
     task run_phase(uvm_phase phase);
         core_img_item txn;
+        `uvm_info("CORE_DRIVER", "Running Single Mode Driver", UVM_MEDIUM);        
         forever begin
             // Drive Signals
             seq_item_port.get_next_item(txn);
@@ -136,6 +143,52 @@ class core_driver extends uvm_driver #(core_img_item);
         end
     endtask : run_phase 
 endclass : core_driver
+
+// Continuous Mode Stimulus Driver
+class core_driver_pipeline extends core_driver;
+    `uvm_component_utils(core_driver_pipeline)
+
+    // Constructor
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction : new
+
+    // Drive Signal Phase
+    task run_phase(uvm_phase phase);
+        core_img_item txn;
+        `uvm_info("CORE_DRIVER_PIPELINE", "Running Continuous Mode Driver", UVM_MEDIUM);
+
+        // Apply Reset
+        @(cif.cb);
+        cif.cb.rst <= 1'b0;
+        @(cif.cb);
+        cif.cb.rst <= 1'b1;
+        @(cif.cb);
+        cif.cb.rst <= 1'b0;
+
+        forever begin
+            // Drive Signals
+            seq_item_port.get_next_item(txn);
+
+            // Send Expected Label
+            expected_port.put(txn.label);
+            
+            // Send Pixels Sequentially
+            for (int i = 0; i < `IMG_WIDTH * `IMG_HEIGHT; i++) begin
+                @(cif.cb);
+                cif.cb.i_valid <= 1'b1;
+                cif.cb.pixel <= txn.img[i];
+            end
+
+            // Deassert input valid
+            @(cif.cb);
+            cif.cb.i_valid <= 1'b0;
+
+            // Finish Driving Signals
+            seq_item_port.item_done();
+        end
+    endtask : run_phase 
+endclass : core_driver_pipeline
 
 class core_monitor extends uvm_monitor;
     `uvm_component_utils(core_monitor)
