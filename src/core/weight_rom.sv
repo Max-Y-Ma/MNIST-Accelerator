@@ -1,6 +1,6 @@
 // Read-only Memory Module for Neuron Weights
 module weight_rom #(
-    parameter DATA_WIDTH = 24,
+    parameter DATA_WIDTH = 32,
     parameter NUM_WEIGHTS = 10,
     parameter WEIGHT_FILE = ""
 ) (

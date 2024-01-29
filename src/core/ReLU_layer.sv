@@ -1,6 +1,6 @@
 // ReLU Layer Module, Generates all ReLU Cells
 module ReLU_layer #(
-    parameter DATA_WIDTH = 24,
+    parameter DATA_WIDTH = 32,
     parameter NUM_NODES = 20
 ) (
     input logic clk, rst, i_valid,

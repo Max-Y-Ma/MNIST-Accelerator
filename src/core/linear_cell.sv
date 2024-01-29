@@ -2,7 +2,7 @@
 `include "core_config.svh"
 
 module linear_cell #(
-    parameter DATA_WIDTH = 24,
+    parameter DATA_WIDTH = 32,
     parameter INPUT_LENGTH = 784,
     parameter WEIGHT_FILE = ""
 ) (
