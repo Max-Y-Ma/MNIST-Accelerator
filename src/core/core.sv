@@ -10,12 +10,14 @@
  */
 
 // Top Module for the MNIST Accelerator Core
+`include "core_config.svh"
+
 module core #(
-    parameter DATA_WIDTH = 24,
-    parameter LAYER1_WIDTH = 784,
-    parameter LAYER2_WIDTH = 500,
-    parameter LAYER3_WIDTH = 500,
-    parameter LAYER4_WIDTH = 10
+    parameter DATA_WIDTH = `DATA_WIDTH,
+    parameter LAYER1_WIDTH = `LAYER1_WIDTH,
+    parameter LAYER2_WIDTH = `LAYER2_WIDTH,
+    parameter LAYER3_WIDTH = `LAYER3_WIDTH,
+    parameter LAYER4_WIDTH = `LAYER4_WIDTH
 ) (
     input logic clk, rst,
     input logic i_valid, 
