@@ -62,21 +62,18 @@ module core #(
     // Serializer
     logic serializer_o_valid;
     logic [DATA_WIDTH-1:0] layer3_din;
-    logic [$clog2(LAYER3_WIDTH)-1:0] serializer_count;
-    always_ff @(posedge clk) begin
-        if (rst || (serializer_count == LAYER3_WIDTH)) begin
-            layer3_din <= '0;
-            serializer_count <= '0;
-        end else if (layer2_o_valid || (serializer_count != 0)) begin
-            layer3_din <= layer2_out[serializer_count];
-            serializer_count <= serializer_count + 1'b1;
-        end else begin
-            layer3_din <= layer3_din;
-            serializer_count <= serializer_count;
-        end
-
-        serializer_o_valid <= layer2_o_valid;
-    end
+    serializer #(
+        .DATA_WIDTH(DATA_WIDTH),
+        .MAX_COUNT(LAYER3_WIDTH)
+    ) serializer (
+        .clk(clk),
+        .rst(rst),
+        .i_valid(layer2_o_valid),
+        .parallel_in(layer2_out),
+        .o_valid(serializer_o_valid),
+        .serial_out(layer3_din)
+    );
+    
 
     // Feedforward Linear Layer #2
     logic layer3_o_valid;
@@ -98,7 +95,12 @@ module core #(
 
     // Output Logic
     assign o_valid = layer3_o_valid;
-
-    
+    argmax #(
+        .DATA_WIDTH(DATA_WIDTH),
+        .NUM_ARGS(LAYER4_WIDTH)
+    ) argmax (
+        .arg_vector(layer3_out),
+        .maxarg(digit)
+    );
 
 endmodule
