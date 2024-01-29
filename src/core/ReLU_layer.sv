@@ -1,7 +1,7 @@
 // ReLU Layer Module, Generates all ReLU Cells
 module ReLU_layer #(
     parameter DATA_WIDTH = 24,
-    parameter NUM_NODES = 500
+    parameter NUM_NODES = 20
 ) (
     input logic [DATA_WIDTH-1:0] zin [NUM_NODES],
     output logic [DATA_WIDTH-1:0] zout [NUM_NODES]
