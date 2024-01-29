@@ -1,6 +1,6 @@
 // Linear Layer Module, Generate all Linear Cells, Holds Bias Register ROM
 module linear_layer #(
-    parameter DATA_WIDTH = 24,
+    parameter DATA_WIDTH = 32,
     parameter INPUT_LENGTH = 784,
     parameter NUM_NODES = 20,
     parameter BIAS_FILE = "",

@@ -99,17 +99,6 @@ module core #(
     // Output Logic
     assign o_valid = layer3_o_valid;
 
-    // Argmax Output Logic
-    logic [DATA_WIDTH-1:0] max;
-    always_comb begin : argmax
-        max = '0;
-        digit = '0;
-        for (int i = 0; i < LAYER4_WIDTH; i++) begin
-            if ($signed(layer3_out[i]) > $signed(max)) begin
-                max = layer3_out[i];
-                digit = i;
-            end
-        end
-    end
+    
 
 endmodule
