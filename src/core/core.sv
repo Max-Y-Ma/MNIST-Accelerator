@@ -31,8 +31,8 @@ module core #(
         .DATA_WIDTH(DATA_WIDTH),
         .INPUT_LENGTH(LAYER1_WIDTH),
         .NUM_NODES(LAYER2_WIDTH),
-        .BIAS_FILE("config/rom/layer1_bias.mif"),
-        .WEIGHT_FILE_PREFIX("config/rom/layer1_weights")
+        .BIAS_FILE("layer1_bias.mif"),
+        .WEIGHT_FILE_PREFIX("layer1_weights")
     ) linear_layer1 (
         .clk(clk),
         .rst(rst),
@@ -95,8 +95,8 @@ module core #(
         .DATA_WIDTH(DATA_WIDTH),
         .INPUT_LENGTH(LAYER3_WIDTH),
         .NUM_NODES(LAYER4_WIDTH),
-        .BIAS_FILE("config/rom/layer2_bias.mif"),
-        .WEIGHT_FILE_PREFIX("config/rom/layer2_weights")
+        .BIAS_FILE("layer2_bias.mif"),
+        .WEIGHT_FILE_PREFIX("layer2_weights")
     ) linear_layer2 (
         .clk(clk),
         .rst(rst),

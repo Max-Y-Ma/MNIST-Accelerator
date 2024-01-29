@@ -19,7 +19,7 @@ sim: $(SRCS)
 .PHONY: run_sim
 run_sim: sim
 	rm -f out/sim/dump.fsdb
-	cp -rf core/config out/sim/config
+	cp core/config/rom/*.mif out/sim/
 	cd out/sim && ./top_tb $(SIMV) -l simulation.log
 
 .PHONY: covrep
