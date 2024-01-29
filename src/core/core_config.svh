@@ -8,4 +8,4 @@
 `define IMG_WIDTH (28)
 `define IMG_HEIGHT (28)
 `define TEST_DATA_FILE_PATH ("../../../data/mnist_test.csv")
-`define TEST_SAMPLES (500)
+`define TEST_SAMPLES (10000)
