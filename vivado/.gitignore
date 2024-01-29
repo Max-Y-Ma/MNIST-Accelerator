@@ -2,6 +2,7 @@
 
 # Project
 mnist_accelerator/**
+*.mif
 
 # Home
 *.jou
