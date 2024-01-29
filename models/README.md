@@ -7,7 +7,7 @@
 
 # About
 - The feed forward neural network consists of three input layers.
-    - 784 input `Linear Layer`, consisting of 500 output nodes.
-    - 500 input `ReLU Layer`, consisting of 500 output nodes.
-    - 500 input `Linear Layer`, consisting of 10 output nodes.
+    - 784 input `Linear Layer`, consisting of 20 output nodes.
+    - 20 input `ReLU Layer`, consisting of 20 output nodes.
+    - 20 input `Linear Layer`, consisting of 10 output nodes.
 - An argmax is applied to the output vector, producing the predicted digit.

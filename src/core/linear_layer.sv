@@ -2,7 +2,7 @@
 module linear_layer #(
     parameter DATA_WIDTH = 24,
     parameter INPUT_LENGTH = 784,
-    parameter NUM_NODES = 500,
+    parameter NUM_NODES = 20,
     parameter BIAS_FILE = "",
     parameter WEIGHT_FILE_PREFIX = ""
 ) (
